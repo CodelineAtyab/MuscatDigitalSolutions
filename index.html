@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legit Design Studio — SaaS & AI Startup Design from 0 to 100</title>
+  <meta name="description" content="We take your SaaS and AI startups from 0–100 in 30 days. Trusted by 82+ founders worldwide. UI/UX design that ships MVPs, raises funding, and grows revenue." />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- AOS scroll animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-black text-white antialiased">
+
+  <!-- NAV -->
+  <header class="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-5 flex items-center justify-between backdrop-blur-md bg-black/40 border-b border-white/5">
+    <a href="#" class="text-2xl font-bold tracking-tight">LDS<span class="text-violet-400">.</span></a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-white/70">
+      <a href="#work" class="hover:text-white transition">Work</a>
+      <a href="#services" class="hover:text-white transition">Services</a>
+      <a href="#process" class="hover:text-white transition">Process</a>
+      <a href="#faq" class="hover:text-white transition">FAQ</a>
+    </nav>
+    <button class="menu-btn w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative pt-40 pb-24 px-6 overflow-hidden text-center">
+    <div class="aurora"></div>
+    <span class="badge" data-aos="fade-up">✦ Trusted by 82+ Founders Worldwide</span>
+    <h1 class="display mt-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+      We take your <em class="text-violet-400 not-italic">SaaS</em> and <em class="text-violet-400 not-italic">AI</em> startups from 0–100 in 30 days only
+    </h1>
+    <p class="mt-6 max-w-2xl mx-auto text-white/60 text-lg" data-aos="fade-up" data-aos-delay="200">
+      We create SaaS UI/UX design that turns ideas into products users love. Based in Montana, we help founders ship MVPs in weeks, raise funding, and grow revenue through interfaces built for conversion.
+    </p>
+    <div class="mt-10 flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="300">
+      <a href="#" class="btn btn-primary">Book a call <i class="fa-solid fa-arrow-right ml-2"></i></a>
+      <a href="#work" class="btn btn-ghost">See real results</a>
+    </div>
+
+    <div class="mt-20 max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-2" data-aos="zoom-in" data-aos-delay="400">
+      <div class="rounded-2xl bg-neutral-900 aspect-video flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.25),transparent_60%)]"></div>
+        <div class="space-y-4 z-10 text-left max-w-md">
+          <div class="bubble bubble-dark">Hey, I have an idea 🤔💡</div>
+          <div class="bubble bubble-light ml-12">Let's ship it in 30 days ⚡</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO MARQUEE -->
+  <section class="py-10 border-y border-white/5 overflow-hidden">
+    <p class="text-center text-sm text-white/40 mb-6">Trusted by startups building the future of technology</p>
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>Sage</span><span>Syke</span><span>Honeycomb</span><span>Protocol</span><span>Nova</span><span>Vertex</span><span>Lumen</span><span>Forge</span>
+        <span>Sage</span><span>Syke</span><span>Honeycomb</span><span>Protocol</span><span>Nova</span><span>Vertex</span><span>Lumen</span><span>Forge</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section id="work" class="px-6 md:px-12 py-28 max-w-7xl mx-auto">
+    <div class="flex items-end justify-between flex-wrap gap-6 mb-12">
+      <div>
+        <span class="eyebrow">CASE STUDIES</span>
+        <h2 class="display-sm mt-3">Real work, real results</h2>
+      </div>
+      <div class="flex gap-3 text-sm">
+        <button class="chip chip-active">SaaS</button>
+        <button class="chip">Artificial Intelligence</button>
+        <button class="chip">Web3</button>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <article class="case-card" data-aos="fade-up">
+        <div class="case-thumb bg-gradient-to-br from-violet-500/30 via-indigo-500/20 to-fuchsia-500/30">
+          <span class="text-7xl font-bold tracking-tight">Sage</span>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-semibold">Sage</h3>
+          <p class="text-white/50 text-sm mt-1">LegalTech • AI LLM • Case Analysis</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">UI/UX Design</span><span class="tag">Prototyping</span><span class="tag">Wireframing</span><span class="tag">SaaS MVP</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="case-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="case-thumb bg-gradient-to-br from-emerald-500/30 via-cyan-500/20 to-violet-500/30">
+          <span class="text-7xl font-bold tracking-tight">Syke</span>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-semibold">Syke</h3>
+          <p class="text-white/50 text-sm mt-1">Agentic AI • LLM</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="tag">UI/UX Design</span><span class="tag">No-code Dev</span><span class="tag">Framer Dev</span><span class="tag">User Research</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="text-center mt-12">
+      <a href="#" class="btn btn-ghost">See all results</a>
+    </div>
+  </section>
+
+  <!-- PATHS -->
+  <section class="px-6 md:px-12 py-28 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <span class="eyebrow">CHOOSE YOUR PATH</span>
+      <h2 class="display-sm mt-3">What does your <em class="text-violet-400 not-italic">startup</em> need?</h2>
+      <p class="text-white/60 mt-4">We help founders launch MVPs, redesign products for growth, or scale design teams. Pick your path and ship faster.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 mt-14">
+      <div class="path-card" data-aos="fade-up">
+        <div class="path-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <h3>Redesign</h3>
+        <p class="path-sub">For startups with existing SaaS products</p>
+        <p>Fix confusing flows and outdated visuals. Our SaaS UI/UX design boosts retention and conversions.</p>
+        <a href="#" class="path-link">Read more <i class="fa-solid fa-arrow-right text-xs"></i></a>
+      </div>
+      <div class="path-card path-card-featured" data-aos="fade-up" data-aos-delay="100">
+        <div class="path-icon"><i class="fa-solid fa-rocket"></i></div>
+        <h3>Ship an MVP</h3>
+        <p class="path-sub">For founders launching their first product</p>
+        <p>Launch your MVP in 3 weeks. Validate demand before spending months on code or dev bills.</p>
+        <a href="#" class="path-link">Read more <i class="fa-solid fa-arrow-right text-xs"></i></a>
+      </div>
+      <div class="path-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="path-icon"><i class="fa-solid fa-people-group"></i></div>
+        <h3>Extend my team</h3>
+        <p class="path-sub">For teams looking to outsource design</p>
+        <p>Add senior design capacity without full-time hires. We specialize in AI product design at startup speed.</p>
+        <a href="#" class="path-link">Read more <i class="fa-solid fa-arrow-right text-xs"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / STATS -->
+  <section class="px-6 md:px-12 py-28 max-w-7xl mx-auto">
+    <span class="eyebrow">WHO WE ARE</span>
+    <div class="grid md:grid-cols-2 gap-12 mt-6 items-start">
+      <h2 class="display-sm">Startup product design that <em class="text-violet-400 not-italic">raises funding</em></h2>
+      <div>
+        <p class="text-white/70 text-lg leading-relaxed">
+          Legit Design Studio partners with founders building SaaS products, AI platforms, and Web3 applications. We've helped startups raise over <strong class="text-white">$93M</strong>, because investors fund products that look as serious as the tech behind them.
+        </p>
+        <a href="#" class="btn btn-ghost mt-8 inline-flex">Read more</a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+      <div class="stat"><div class="stat-num">7x</div><div class="stat-label">Average ROI</div></div>
+      <div class="stat"><div class="stat-num">73</div><div class="stat-label">Global clients</div></div>
+      <div class="stat"><div class="stat-num">$93M+</div><div class="stat-label">Raised in funding</div></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="px-6 md:px-12 py-28 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <span class="eyebrow">WHAT WE DO BEST</span>
+      <h2 class="display-sm mt-3">UI/UX design services that turn SaaS ideas into funded products</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mt-14">
+      <div class="service-card" data-aos="fade-up">
+        <span class="service-num">01</span>
+        <h3>Branding</h3>
+        <p>Legit brand identity creates visual systems that communicate your mission and separate you from competitors.</p>
+        <ul><li>Design systems</li><li>Strategic design</li><li>Brand identity</li></ul>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+        <span class="service-num">02</span>
+        <h3>UI/UX Design</h3>
+        <p>Legit UI/UX Design builds interfaces users love. Every pixel serves conversion, retention, or delight.</p>
+        <ul><li>Startup UI/UX</li><li>SaaS UI/UX</li><li>WCAG compliant</li><li>Design audit</li></ul>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+        <span class="service-num">03</span>
+        <h3>Web Development</h3>
+        <p>Legit web development ships SEO-optimized sites on no-code platforms. Launch in days, update yourself.</p>
+        <ul><li>Website design</li><li>No-code development</li><li>Framer & Webflow</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="px-6 md:px-12 py-28 max-w-7xl mx-auto">
+    <span class="eyebrow">PROCESS WE FOLLOW</span>
+    <h2 class="display-sm mt-3 max-w-3xl">Startup product design process: <em class="text-violet-400 not-italic">idea to growth</em></h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
+      <div class="step"><div class="step-num">01</div><h4>Discovery</h4><p>We talk to real users before designing. Workshops and interviews uncover pain points tied to your goals.</p></div>
+      <div class="step"><div class="step-num">02</div><h4>Strategy</h4><p>We define product positioning, user flows, and the metrics that prove design is working for revenue.</p></div>
+      <div class="step"><div class="step-num">03</div><h4>Design</h4><p>High-fidelity, conversion-focused interfaces. We iterate fast with you, no endless feedback loops.</p></div>
+      <div class="step"><div class="step-num">04</div><h4>Ship & grow</h4><p>We hand off pixel-perfect builds, then partner on iterations as your product reaches market fit.</p></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="px-6 md:px-12 py-28 max-w-5xl mx-auto text-center">
+    <span class="eyebrow">TESTIMONIAL</span>
+    <h2 class="display-sm mt-3">Why clients choose <em class="text-violet-400 not-italic">Legit Design Studio</em></h2>
+    <blockquote class="mt-12 text-2xl md:text-3xl font-medium leading-snug text-white/90">
+      "Excellent to work with. Legit Design Studio enhanced the imagery and functionality of my Framer website. Very professional, clear communicators, highly skilled. Highly recommend."
+    </blockquote>
+    <div class="mt-8 flex items-center justify-center gap-4">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-500"></div>
+      <div class="text-left">
+        <div class="font-semibold">Naomi Heyes</div>
+        <div class="text-white/50 text-sm">Founder</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 mt-16">
+      <div class="stat"><div class="stat-num">72%</div><div class="stat-label">Increase in customer satisfaction</div></div>
+      <div class="stat"><div class="stat-num">34%</div><div class="stat-label">Increase in operational efficiency</div></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="px-6 md:px-12 py-28 max-w-4xl mx-auto">
+    <span class="eyebrow">FAQs</span>
+    <h2 class="display-sm mt-3">Frequently asked questions</h2>
+
+    <div class="mt-12 divide-y divide-white/10 border-y border-white/10">
+      <details class="faq"><summary>Do I really need UX research before building my MVP?<i class="fa-solid fa-plus"></i></summary><p>Yes. Research saves you months of building the wrong product. Even a week of user interviews protects your runway.</p></details>
+      <details class="faq"><summary>How fast can you design and launch my SaaS or Web3 product?<i class="fa-solid fa-plus"></i></summary><p>Most MVPs ship in 3–4 weeks. Full product redesigns typically take 6–8 weeks depending on scope.</p></details>
+      <details class="faq"><summary>Can you improve my existing product instead of building from scratch?<i class="fa-solid fa-plus"></i></summary><p>Absolutely — our Redesign path is built for SaaS teams ready to boost retention and conversion.</p></details>
+      <details class="faq"><summary>What if I don't know exactly what I need?<i class="fa-solid fa-plus"></i></summary><p>Book a free consultation. We'll help you scope the problem before any commitment.</p></details>
+      <details class="faq"><summary>Do you follow accessibility standards (ADA/WCAG)?<i class="fa-solid fa-plus"></i></summary><p>Yes, WCAG 2.1 AA compliance is baked into our process.</p></details>
+      <details class="faq"><summary>How much will this cost me?<i class="fa-solid fa-plus"></i></summary><p>Engagements start at $8k for MVPs. We'll quote precisely after the discovery call.</p></details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="px-6 md:px-12 py-28">
+    <div class="cta">
+      <h2 class="display-sm">Let's build something <em class="text-violet-400 not-italic">legit</em>.</h2>
+      <p class="mt-4 text-white/60 max-w-xl mx-auto">Tell us about your startup. We'll reply within 24 hours with a clear next step.</p>
+      <a href="#" class="btn btn-primary mt-8 inline-flex">Book a call <i class="fa-solid fa-arrow-right ml-2"></i></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="px-6 md:px-12 py-12 border-t border-white/10 text-sm text-white/50">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6">
+      <div>
+        <div class="text-white text-xl font-bold">LDS<span class="text-violet-400">.</span></div>
+        <p class="mt-2">SaaS & AI startup design — Montana, USA</p>
+      </div>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white">Twitter</a>
+        <a href="#" class="hover:text-white">LinkedIn</a>
+        <a href="#" class="hover:text-white">Dribbble</a>
+        <a href="#" class="hover:text-white">Contact</a>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-8 text-xs text-white/30">© 2026 Legit Design Studio — Inspired layout, original build.</div>
+  </footer>
+
+  <!-- Floating chat -->
+  <button class="chat-fab" aria-label="Open chat"><i class="fa-solid fa-comment-dots"></i></button>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
