@@ -16,6 +16,21 @@ body {
   background-attachment: fixed;
 }
 
+/* Mobile nav */
+header nav.mobile-open {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(5,5,5,0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem;
+  gap: 1.25rem;
+}
+
 /* Typography */
 .display, .display-sm, h1, h2, h3, h4 {
   font-family: 'Space Grotesk', sans-serif;
@@ -291,3 +306,78 @@ body {
 @media (max-width: 768px) {
   .display { font-size: 2.5rem; }
 }
+
+/* Industry cards */
+.industry-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.75rem 1rem;
+  text-align: center;
+  transition: all 0.3s;
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+}
+.industry-card:hover { border-color: rgba(139,92,246,0.4); transform: translateY(-4px); }
+.industry-card i { font-size: 1.8rem; color: var(--violet-soft); }
+.industry-card span { font-weight: 600; font-size: 0.95rem; font-family: 'Space Grotesk', sans-serif; }
+
+/* AI cards */
+.ai-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+.ai-card:hover { border-color: rgba(139,92,246,0.4); transform: translateY(-4px); }
+.ai-icon {
+  width: 48px; height: 48px; border-radius: 0.85rem;
+  background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(99,102,241,0.12));
+  border: 1px solid rgba(139,92,246,0.25);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--violet-soft); font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+.ai-card h4 { font-size: 1.1rem; font-family: 'Space Grotesk', sans-serif; }
+.ai-card p { color: rgba(255,255,255,0.55); font-size: 0.875rem; margin-top: 0.5rem; line-height: 1.5; }
+
+/* Contact form */
+.input-field {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.25s;
+}
+.input-field:focus { border-color: rgba(139,92,246,0.5); }
+.input-field::placeholder { color: rgba(255,255,255,0.3); }
+select.input-field { color: rgba(255,255,255,0.5); }
+select.input-field option { background: #111; color: #fff; }
+textarea.input-field { resize: vertical; min-height: 100px; }
+
+.contact-icon {
+  width: 44px; height: 44px; border-radius: 0.85rem;
+  background: rgba(139,92,246,0.12);
+  border: 1px solid rgba(139,92,246,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--violet-soft); font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* WhatsApp CTA */
+.whatsapp-btn {
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s;
+  width: fit-content;
+}
+.whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,211,102,0.35); }

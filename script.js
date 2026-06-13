@@ -52,7 +52,31 @@ window.addEventListener('scroll', () => {
   else header.classList.remove('bg-black/70');
 });
 
-// Mobile menu toggle (placeholder)
-document.querySelector('.menu-btn')?.addEventListener('click', () => {
-  alert('Mobile menu — wire up your nav here.');
-});
+// Mobile menu toggle
+const menuBtn = document.querySelector('.menu-btn');
+const navLinks = document.querySelector('header nav');
+if (menuBtn && navLinks) {
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('mobile-open');
+  });
+  // Close menu when a link is clicked
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('mobile-open'));
+  });
+}
+
+// Contact form submission
+const contactForm = document.querySelector('#contact form');
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = contactForm.querySelector('[type="text"]').value.trim();
+    const email = contactForm.querySelector('[type="email"]').value.trim();
+    if (!name || !email) {
+      alert('Please fill in your name and email.');
+      return;
+    }
+    alert('Thank you for your message! We will get back to you within 24 hours.');
+    contactForm.reset();
+  });
+}
