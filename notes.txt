@@ -1,0 +1,27 @@
+DNS CNAME muscataimarket.macrodigital.om -> mds.thedevrelay.com
+
+1. edit portfolios via categories (look like image and actual pngs in images dir)
+
+2. update the name to muscataimarkets 
+
+3. Grey Box with chat will be replaced by animated .gif or .mp4
+
+4. Check the latest company profile .pdf and update the content. From the table of content; on Home page we want to add Our Mission (Includes 03 04), 05 is services (includes 5 till 16). For 17, on the moving banner, need to show the list of clients (with logos)
+
+6. Extract .pdf text using Claude
+
+7. How we work section is going to contain our approach content from the the pdf
+
+8. AI Powered solution would have, Any kind of AI Automation is provided
+
+9. Get Testimonial (Hide it for now along with satisfaction data)
+
+7. Our approach should be displayed 
+
+8. Company whatsapp number to be added 77739395
+
+9. Form content can be sent to google workspace channel (muscataimarket-notifications). Office location wtll be Al-Khoud, Muscat, Sultanate of Oman. Contact Email to be created
+
+10. Our Partners section will be added after our clients moving banner
+
+11. FAQ can be hidden for now
