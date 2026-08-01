@@ -35,36 +35,186 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 
   const escape = (s) => String(s).replace(/[<>]/g, (c) => (c === '<' ? '&lt;' : '&gt;'));
 
+  const imgSrc = (item, i) => `assets/portfolio/${item.slug}/${String(i + 1).padStart(2, '0')}.jpg`;
+
+  /* Logos are sized to a constant visual area, not a constant height: capping
+     height alone left the square Haddaya mark at 52x52 while the 5.3:1 blumen
+     mark ran to 221x41. The area is the one the OMAN summit lockup already
+     used (92x52), so that one is unchanged and the others match it. */
+  const LOGO_AREA = 92 * 52;
+  const logoHeight = (ar) => Math.round(Math.sqrt(LOGO_AREA / (ar || 1)));
+
+  const brandMarkup = (item) => (item.logo
+    ? `<img class="pf-logo${item.logoInvert ? ' invert' : ''}" src="${item.logo}" alt="${escape(item.brand)} logo" style="--logo-h:${logoHeight(item.logoAr)}px" loading="lazy">`
+    : `<span class="pf-wordmark">${escape(item.brand)}</span>`);
+
   const buildCard = (item) => {
+    const count = item.ar.length;
     const slide = document.createElement('div');
     slide.className = 'pf-slide';
 
-    const brand = item.logo
-      ? `<img class="pf-logo${item.logoInvert ? ' invert' : ''}" src="${item.logo}" alt="${escape(item.brand)} logo" loading="lazy">`
-      : `<span class="pf-wordmark">${escape(item.brand)}</span>`;
+    const imgs = item.ar.map((_, i) =>
+      `<img src="${imgSrc(item, i)}" alt="${escape(item.brand)} — image ${i + 1} of ${count}"${i === 0 ? ' class="is-active"' : ' loading="lazy"'}>`
+    ).join('');
 
-    const imgs = Array.from({ length: item.images }, (_, i) => {
-      const n = String(i + 1).padStart(2, '0');
-      return `<img src="assets/portfolio/${item.slug}/${n}.jpg" alt="${escape(item.brand)} — image ${i + 1} of ${item.images}"${i === 0 ? ' class="is-active"' : ' loading="lazy"'}>`;
-    }).join('');
-
-    const dots = Array.from({ length: item.images }, (_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).join('');
+    const dots = item.ar.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).join('');
 
     slide.innerHTML = `
       <article class="pf-card">
         <div class="pf-card-top">
           <p class="pf-desc">${item.desc}</p>
-          <div class="pf-brand">${brand}<span class="pf-sub">${escape(item.sub)}</span></div>
+          <div class="pf-brand">${brandMarkup(item)}<span class="pf-sub">${escape(item.sub)}</span></div>
         </div>
         <div class="pf-tags">${item.tags.map((t) => `<span class="pf-tag">${escape(t)}</span>`).join('')}</div>
         <div class="pf-media">
-          <span class="pf-count">${item.images} visuals</span>
+          <span class="pf-count">${count} visuals</span>
           ${imgs}
           <div class="pf-media-dots">${dots}</div>
+          <button class="pf-open" type="button" aria-label="View all ${count} visuals from ${escape(item.brand)}">
+            <span class="pf-open-cue"><i class="fa-solid fa-up-right-and-down-left-from-center"></i> View all ${count}</span>
+          </button>
         </div>
       </article>`;
+
+    slide.querySelector('.pf-open').addEventListener('click', () => openGallery(item));
     return slide;
   };
+
+  /* ------------------------------------------------------------- lightbox
+     Mosaic laid out the way the source PDFs arrange their visuals: wide
+     shots take the full row, portraits and squares pair up beside each
+     other. `dense` backfills so there are no holes. */
+
+  const lb       = document.querySelector('#pf-lightbox');
+  const lbBrand  = lb.querySelector('.pf-lb-brand');
+  const lbDesc   = lb.querySelector('.pf-lb-desc');
+  const lbTags   = lb.querySelector('.pf-lb-tags');
+  const lbGrid   = lb.querySelector('.pf-lb-grid');
+  const zoom     = document.querySelector('#pf-zoom');
+  const zoomImg  = zoom.querySelector('img');
+  const zoomCnt  = zoom.querySelector('.pf-zoom-count');
+
+  let current = null;      // item currently shown in the gallery
+  let zoomIdx = 0;
+  let lastFocus = null;
+
+  /* Open/closed state is tracked in these flags rather than read back off
+     `.hidden`, which lags by the length of the exit animation. Reading
+     `.hidden` made a second Escape re-close the zoom instead of the gallery,
+     and let the focus trap steal focus back during the close. */
+  let galleryOpen = false;
+  let zoomOpen = false;
+
+  const lockScroll = (on) => { document.body.style.overflow = on ? 'hidden' : ''; };
+
+  const openGallery = (item) => {
+    current = item;
+    galleryOpen = true;
+    lastFocus = document.activeElement;
+
+    lbBrand.innerHTML = `${brandMarkup(item)}<span class="pf-sub">${escape(item.sub)}</span>`;
+    lbDesc.innerHTML = item.desc;
+    lbTags.innerHTML = item.tags.map((t) => `<span class="pf-tag">${escape(t)}</span>`).join('');
+
+    /* Each tile keeps the image's own proportions and wide shots take the full
+       row, so the set reads the way the source PDF lays it out. Where a short
+       image shares a row with a taller one it stretches to the row height
+       rather than leaving a gap: the image itself is `contain`ed (never
+       cropped or stretched) and a blurred copy of it fills the difference. */
+    lbGrid.innerHTML = item.ar.map((ar, i) => {
+      const src = imgSrc(item, i);
+      return `
+      <button class="pf-tile${ar >= 1.5 ? ' wide' : ''}" type="button" data-i="${i}">
+        <span class="pf-tile-sizer" style="aspect-ratio:${ar}"></span>
+        <img class="pf-tile-bg" src="${src}" alt="" aria-hidden="true" loading="lazy">
+        <img class="pf-tile-img" src="${src}" alt="${escape(item.brand)} — image ${i + 1} of ${item.ar.length}" loading="lazy">
+      </button>`;
+    }).join('');
+
+    lb.hidden = false;
+    paused = true;
+    lockScroll(true);
+    requestAnimationFrame(() => lb.classList.add('open'));
+    lb.querySelector('.pf-lb-close').focus();
+  };
+
+  const closeGallery = () => {
+    if (!galleryOpen) return;
+    galleryOpen = false;
+    closeZoom();
+    lb.classList.remove('open');
+    const done = () => {
+      if (galleryOpen) return;          // reopened inside the exit animation
+      lb.hidden = true;
+      lockScroll(false);
+    };
+    reduceMotion ? done() : setTimeout(done, 200);
+    paused = false;
+    current = null;
+
+    // Never leave focus sitting on an element we just hid.
+    if (lastFocus && lastFocus.isConnected && lastFocus !== document.body) {
+      lastFocus.focus();
+    } else {
+      const active = document.activeElement;
+      if (active && (lb.contains(active) || zoom.contains(active))) active.blur();
+    }
+  };
+
+  const showZoom = (i) => {
+    if (!current) return;
+    const n = current.ar.length;
+    zoomIdx = (i + n) % n;
+    zoomImg.src = imgSrc(current, zoomIdx);
+    zoomImg.alt = `${current.brand} — image ${zoomIdx + 1} of ${n}`;
+    zoomCnt.textContent = `${zoomIdx + 1} / ${n}`;
+    zoom.querySelectorAll('.pf-zoom-nav').forEach((b) => { b.hidden = n < 2; });
+  };
+
+  const openZoom = (i) => {
+    zoomOpen = true;
+    zoom.hidden = false;
+    showZoom(i);
+    requestAnimationFrame(() => zoom.classList.add('open'));
+    zoom.querySelector('.pf-zoom-close').focus();
+  };
+
+  const closeZoom = () => {
+    if (!zoomOpen) return;
+    zoomOpen = false;
+    zoom.classList.remove('open');
+    const done = () => {
+      if (zoomOpen) return;
+      zoom.hidden = true;
+      zoomImg.removeAttribute('src');
+    };
+    reduceMotion ? done() : setTimeout(done, 200);
+  };
+
+  lbGrid.addEventListener('click', (e) => {
+    const tile = e.target.closest('.pf-tile');
+    if (tile) openZoom(Number(tile.dataset.i));
+  });
+
+  lb.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', closeGallery));
+  zoom.querySelectorAll('[data-zclose]').forEach((el) => el.addEventListener('click', closeZoom));
+  zoom.querySelector('.pf-zoom-prev').addEventListener('click', () => showZoom(zoomIdx - 1));
+  zoom.querySelector('.pf-zoom-next').addEventListener('click', () => showZoom(zoomIdx + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (!galleryOpen) return;
+    if (e.key === 'Escape') { zoomOpen ? closeZoom() : closeGallery(); return; }
+    if (!zoomOpen) return;
+    if (e.key === 'ArrowLeft')  showZoom(zoomIdx - 1);
+    if (e.key === 'ArrowRight') showZoom(zoomIdx + 1);
+  });
+
+  // Keep Tab inside whichever layer is on top.
+  document.addEventListener('focusin', (e) => {
+    if (!galleryOpen) return;
+    const scope = zoomOpen ? zoom : lb;
+    if (!scope.contains(e.target)) scope.querySelector('button').focus();
+  });
 
   // ------------------------------------------------- inner image crossfade
 

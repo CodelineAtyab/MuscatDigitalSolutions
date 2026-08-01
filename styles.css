@@ -174,21 +174,28 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .marquee-track {
   display: flex;
+  align-items: center;
   gap: 3.5rem;
   width: max-content;
+  min-height: 60px;
   animation: scroll 38s linear infinite;
 }
 
-.marquee-track span {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 600;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.42);
-  transition: color 0.25s;
+/* Client lockups are the real marks lifted from the company profile deck.
+   Each one's height is set inline to a constant visual AREA (see the note on
+   .pf-logo) so a 5.3:1 wordmark and a square seal carry the same weight.
+   brightness(0) invert(1) flattens whatever colour they are to plain white. */
+.marquee-track img {
+  flex: 0 0 auto;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.72;
+  transition: opacity 0.25s;
 }
 
-.marquee-track span:hover { color: var(--orange-soft); }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-track img:hover { opacity: 1; }
 
 @keyframes scroll {
   from { transform: translateX(0); }
@@ -272,7 +279,15 @@ h1, h2, h3, h4, .display, .display-sm {
   text-align: right;
 }
 
-.pf-logo { max-height: 52px; max-width: 100%; margin-left: auto; object-fit: contain; }
+/* --logo-h is set per item by script.js so every lockup covers the same
+   visual area regardless of its aspect ratio. */
+.pf-logo {
+  height: var(--logo-h, 52px);
+  width: auto;
+  max-width: 100%;
+  margin-left: auto;
+  object-fit: contain;
+}
 
 /* The OMAN summit lockup is dark artwork; the source card uses a white version. */
 .pf-logo.invert { filter: brightness(0) invert(1); }
@@ -353,7 +368,7 @@ h1, h2, h3, h4, .display, .display-sm {
   position: absolute;
   top: 0.7rem;
   right: 0.7rem;
-  z-index: 2;
+  z-index: 4;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
   font-size: 0.68rem;
@@ -361,6 +376,225 @@ h1, h2, h3, h4, .display, .display-sm {
   border: 1px solid var(--border);
   backdrop-filter: blur(6px);
   color: rgba(255, 255, 255, 0.8);
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+}
+
+/* Transparent hit area over the whole frame — opens the gallery. */
+.pf-open {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  cursor: zoom-in;
+  background: rgba(6, 5, 24, 0);
+  transition: background 0.25s;
+}
+
+.pf-open-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(6, 5, 24, 0.75);
+  border: 1px solid var(--border-lit);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(6px) scale(0.96);
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.pf-open:hover, .pf-open:focus-visible { background: rgba(6, 5, 24, 0.45); outline: none; }
+.pf-open:hover .pf-open-cue,
+.pf-open:focus-visible .pf-open-cue { opacity: 1; transform: none; }
+.pf-media:hover .pf-count { background: var(--orange); border-color: transparent; color: #fff; }
+
+/* ------------------------------------------------------------- lightbox */
+
+.pf-lb, .pf-zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem) clamp(0.75rem, 4vw, 3rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.pf-zoom { z-index: 110; align-items: center; overflow: hidden; }
+
+.pf-lb-backdrop, .pf-zoom-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 3, 16, 0.82);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.pf-lb.open .pf-lb-backdrop, .pf-zoom.open .pf-zoom-backdrop { opacity: 1; }
+
+.pf-lb-panel {
+  position: relative;
+  width: 100%;
+  max-width: 62rem;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  border-radius: 1.5rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--surface-2), var(--surface) 55%);
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.pf-lb.open .pf-lb-panel { opacity: 1; transform: none; }
+
+.pf-lb-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-lb-brand .pf-logo { margin-left: 0; height: calc(var(--logo-h, 52px) * 1.3); max-width: 320px; }
+.pf-lb-brand .pf-wordmark { font-size: 1.5rem; }
+.pf-lb-brand .pf-sub { letter-spacing: 0.08em; }
+
+.pf-lb-close {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pf-lb-close:hover { background: var(--orange); border-color: transparent; transform: rotate(90deg); }
+
+.pf-lb-desc {
+  margin-top: 1.25rem;
+  max-width: 46rem;
+  font-size: 0.925rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.pf-lb-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+
+/* Wide shots claim the full row, portraits pair up — as in the source PDFs. */
+.pf-lb-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: row dense;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
+}
+
+/* The ratio lives on an inner sizer, never on the tile itself. On the tile it
+   would fight `align-self: stretch`: stretch sets the height from the row, and
+   aspect-ratio then recomputes the WIDTH from that height, so tiles burst out
+   of their column. The sizer contributes the image's natural height to row
+   sizing, while the tile stays one column wide and stretches to the row. */
+.pf-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  border: 1px solid var(--border);
+  background: #0a0820;
+  cursor: zoom-in;
+  align-self: stretch;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.pf-tile.wide { grid-column: span 2; }
+
+.pf-tile-sizer { display: block; width: 100%; /* aspect-ratio set inline */ }
+
+.pf-tile:hover { border-color: var(--border-lit); transform: translateY(-3px); }
+
+.pf-tile-bg, .pf-tile-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Blurred copy of the same file behind the artwork: the letterbox always
+   matches the image's own edges, whatever colour they are. Scaled up so the
+   blur never bleeds transparent pixels in at the sides. */
+.pf-tile-bg { object-fit: cover; filter: blur(26px); transform: scale(1.25); }
+.pf-tile-img { object-fit: contain; }
+
+/* ----------------------------------------------------------- zoom layer */
+
+.pf-zoom-fig {
+  position: relative;
+  max-width: min(92vw, 78rem);
+  max-height: 86vh;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.25s, transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.pf-zoom.open .pf-zoom-fig { opacity: 1; transform: none; }
+
+.pf-zoom-fig img {
+  max-width: min(92vw, 78rem);
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  border-radius: 0.9rem;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9);
+}
+
+.pf-zoom-close, .pf-zoom-nav {
+  position: absolute;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: rgba(12, 10, 38, 0.8);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pf-zoom-close:hover, .pf-zoom-nav:hover { background: var(--orange); border-color: transparent; }
+.pf-zoom-close { top: 1.25rem; right: 1.25rem; }
+.pf-zoom-prev { left: 1.25rem; }
+.pf-zoom-next { right: 1.25rem; }
+
+.pf-zoom-count {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: rgba(12, 10, 38, 0.8);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* carousel controls */
@@ -675,11 +909,27 @@ h1, h2, h3, h4, .display, .display-sm {
      width instead of sizing to max-content. */
   .pf-card-top { flex-direction: column; align-items: stretch; gap: 1rem; }
   .pf-brand { max-width: 100%; text-align: left; }
-  .pf-logo { max-height: 44px; margin-left: 0; margin-right: auto; }
+  .pf-logo { height: calc(var(--logo-h, 52px) * 0.85); margin-left: 0; margin-right: auto; }
   .pf-prev { left: 0; }
   .pf-next { right: 0; }
   .marquee-track { gap: 2rem; }
   .cta { padding: 3rem 1.25rem; }
+
+  /* One column: every visual full width, strict source order. */
+  .pf-lb-grid { grid-template-columns: 1fr; }
+  .pf-tile.wide { grid-column: span 1; }
+  .pf-lb-head { gap: 1rem; }
+  .pf-zoom-prev { left: 0.5rem; }
+  .pf-zoom-next { right: 0.5rem; }
+  .pf-zoom-close { top: 0.5rem; right: 0.5rem; }
+  /* Touch has no hover, so keep the affordance permanently visible. */
+  .pf-open-cue { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-lb-panel, .pf-zoom-fig, .pf-lb-backdrop, .pf-zoom-backdrop { transition: none; }
+  .pf-open-cue { transition: none; }
+  .pf-tile:hover { transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

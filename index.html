@@ -75,8 +75,33 @@
     <p class="text-center text-sm text-white/40 mb-6">Trusted by organisations across government, healthcare, retail, education and energy</p>
     <div class="marquee">
       <div class="marquee-track">
-        <span>Ministry of Health</span><span>Dolmen Mall</span><span>Salmanstores</span><span>Haddaya</span><span>blumen</span><span>BRIMFUL</span><span>Gulfood · Soni Foods</span><span>OMAN Corrosion Summit</span><span>Lovera</span><span>Laviza</span><span>Sentiments Express</span><span>Macro Hypermarket</span><span>Muscat Investment Markets</span>
-        <span>Ministry of Health</span><span>Dolmen Mall</span><span>Salmanstores</span><span>Haddaya</span><span>blumen</span><span>BRIMFUL</span><span>Gulfood · Soni Foods</span><span>OMAN Corrosion Summit</span><span>Lovera</span><span>Laviza</span><span>Sentiments Express</span><span>Macro Hypermarket</span><span>Muscat Investment Markets</span>
+        <img src="assets/clients/lovera.png" alt="Lovera" style="height:32px" loading="lazy">
+        <img src="assets/clients/laviza.png" alt="Laviza" style="height:52px" loading="lazy">
+        <img src="assets/clients/sentiments-express.png" alt="Sentiments Express" style="height:31px" loading="lazy">
+        <img src="assets/clients/homv.png" alt="HOMV Design &amp; Fitout" style="height:30px" loading="lazy">
+        <img src="assets/clients/salmanstores.png" alt="Salmanstores" style="height:48px" loading="lazy">
+        <img src="assets/clients/macro-hypermarket.png" alt="Macro Hypermarket" style="height:35px" loading="lazy">
+        <img src="assets/clients/ms-department-store.png" alt="MS Department Store" style="height:52px" loading="lazy">
+        <img src="assets/clients/muscat-investment-markets.png" alt="Muscat Investment Markets" style="height:28px" loading="lazy">
+        <img src="assets/clients/oman-summit.png" alt="OMAN Materials, Corrosion and Integrity Summit" style="height:38px" loading="lazy">
+        <img src="assets/clients/dolmen-mall.png" alt="Dolmen Mall" style="height:41px" loading="lazy">
+        <img src="assets/clients/blumen.png" alt="blumen" style="height:22px" loading="lazy">
+        <img src="assets/clients/haddaya.png" alt="Haddaya" style="height:52px" loading="lazy">
+        <img src="assets/clients/gulfood.png" alt="Gulfood" style="height:41px" loading="lazy">
+        <!-- duplicated for the seamless loop; hidden from assistive tech -->
+        <img src="assets/clients/lovera.png" alt="" style="height:32px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/laviza.png" alt="" style="height:52px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/sentiments-express.png" alt="" style="height:31px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/homv.png" alt="" style="height:30px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/salmanstores.png" alt="" style="height:48px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/macro-hypermarket.png" alt="" style="height:35px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/ms-department-store.png" alt="" style="height:52px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/muscat-investment-markets.png" alt="" style="height:28px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/oman-summit.png" alt="" style="height:38px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/dolmen-mall.png" alt="" style="height:41px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/blumen.png" alt="" style="height:22px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/haddaya.png" alt="" style="height:52px" aria-hidden="true" loading="lazy">
+        <img src="assets/clients/gulfood.png" alt="" style="height:41px" aria-hidden="true" loading="lazy">
       </div>
     </div>
   </section>
@@ -509,6 +534,30 @@
     </div>
     <div class="max-w-7xl mx-auto mt-8 text-xs text-white/30">© 2026 Muscat AI Markets. All rights reserved.</div>
   </footer>
+
+  <!-- PORTFOLIO LIGHTBOX (populated by script.js) -->
+  <div id="pf-lightbox" class="pf-lb" role="dialog" aria-modal="true" aria-labelledby="pf-lb-title" hidden>
+    <div class="pf-lb-backdrop" data-close></div>
+    <div class="pf-lb-panel">
+      <header class="pf-lb-head">
+        <div class="pf-lb-brand" id="pf-lb-title"></div>
+        <button class="pf-lb-close" type="button" data-close aria-label="Close gallery"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+      <p class="pf-lb-desc"></p>
+      <div class="pf-lb-tags"></div>
+      <div class="pf-lb-grid"></div>
+    </div>
+  </div>
+
+  <!-- SINGLE-IMAGE ZOOM -->
+  <div id="pf-zoom" class="pf-zoom" role="dialog" aria-modal="true" aria-label="Enlarged image" hidden>
+    <div class="pf-zoom-backdrop" data-zclose></div>
+    <button class="pf-zoom-close" type="button" data-zclose aria-label="Close image"><i class="fa-solid fa-xmark"></i></button>
+    <button class="pf-zoom-nav pf-zoom-prev" type="button" aria-label="Previous image"><i class="fa-solid fa-chevron-left"></i></button>
+    <figure class="pf-zoom-fig"><img alt=""></figure>
+    <button class="pf-zoom-nav pf-zoom-next" type="button" aria-label="Next image"><i class="fa-solid fa-chevron-right"></i></button>
+    <span class="pf-zoom-count"></span>
+  </div>
 
   <!-- Floating WhatsApp -->
   <a href="https://wa.me/96877739396" class="chat-fab" aria-label="Chat on WhatsApp" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
