@@ -72,6 +72,24 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   }
 })();
 
+/* 3D tilt + glare on the content cards (vanilla-tilt, MIT, vendored locally).
+   Pointer-driven only — skipped under reduced motion and on coarse-pointer
+   devices, where there is no hover and the transform just costs battery. */
+(() => {
+  const cards = document.querySelectorAll('.tilt-card');
+  if (!cards.length || reduceMotion || !window.VanillaTilt) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  window.VanillaTilt.init(cards, {
+    max: 11,                // deeper tilt; card contents translateZ off the surface
+    perspective: 900,
+    speed: 600,
+    scale: 1.03,
+    glare: true,
+    'max-glare': 0.22,
+    gyroscope: false
+  });
+})();
+
 /* =========================================================================
    PORTFOLIO — category filters + auto-sliding carousel
    Two cards per view on desktop, one on phones (driven by the CSS width of

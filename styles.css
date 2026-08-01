@@ -26,7 +26,7 @@ html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
@@ -85,24 +85,24 @@ header nav.mobile-open {
 /* --------------------------------------------------------------- typography */
 
 h1, h2, h3, h4, .display, .display-sm {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
 
 .display {
   font-size: clamp(2.5rem, 6vw, 4.75rem);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.03;
 }
 
 .display-sm {
   font-size: clamp(1.9rem, 3.8vw, 3rem);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.1;
 }
 
 /* The deck pairs a light word with a bold word — mirror that here. */
-.thin { font-weight: 400; color: rgba(255, 255, 255, 0.82); }
+.thin { font-weight: 300; color: rgba(255, 255, 255, 0.82); }
 
 .eyebrow {
   display: inline-block;
@@ -242,7 +242,7 @@ h1, h2, h3, h4, .display, .display-sm {
   align-items: center;
   gap: 3.5rem;
   width: max-content;
-  min-height: 60px;
+  min-height: 84px;
   animation: scroll 38s linear infinite;
 }
 
@@ -255,7 +255,7 @@ h1, h2, h3, h4, .display, .display-sm {
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  opacity: 0.72;
+  opacity: 0.82;
   transition: opacity 0.25s;
 }
 
@@ -359,7 +359,7 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .pf-wordmark {
   display: block;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.15;
@@ -717,9 +717,131 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .path-card { padding: 2rem; }
 
-.path-card:hover, .service-card:hover, .step:hover, .ai-card:hover, .team-card:hover {
-  transform: translateY(-4px);
+/* Tilted cards get their transform from vanilla-tilt, so hover feedback here
+   is border + shadow only — a translateY would fight the library. */
+.team-card:hover { transform: translateY(-4px); border-color: var(--border-lit); }
+
+.path-card:hover, .service-card:hover, .step:hover, .ai-card:hover {
   border-color: var(--border-lit);
+  box-shadow: 0 28px 60px -34px rgba(124, 77, 255, 0.85);
+}
+
+/* Grid rows built from flex, not grid: an incomplete last row then centres
+   under the rest instead of being left-aligned. Basis math is
+   (100% - (cols-1) * gap) / cols. */
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+.card-grid > * { flex: 0 1 100%; max-width: 100%; }
+
+@media (min-width: 640px) {
+  .card-grid > * {
+    flex-basis: calc((100% - 1.5rem) / 2);
+    max-width: calc((100% - 1.5rem) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid-3 > * { flex-basis: calc((100% - 3rem) / 3);   max-width: calc((100% - 3rem) / 3); }
+  .card-grid-4 > * { flex-basis: calc((100% - 4.5rem) / 4); max-width: calc((100% - 4.5rem) / 4); }
+  .card-grid-5 > * { flex-basis: calc((100% - 6rem) / 5);   max-width: calc((100% - 6rem) / 5); }
+}
+
+/* ------------------------------------------------- eye-catching card chrome */
+
+/* No `overflow: hidden` here on purpose: per spec it forces transform-style
+   back to flat, which would kill the translateZ depth below. The ::after bloom
+   is inset instead of overhanging, so nothing needs clipping. */
+.tilt-card {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 1px gradient edge, drawn with a mask so only the border shows. Lights up on
+   hover in the deck's violet -> magenta -> orange ramp. */
+.tilt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--grad);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+
+.tilt-card:hover::before { opacity: 1; }
+
+/* Warm bloom in the top corner, echoing the deck's gradient corners. Kept
+   inside the card bounds so the card doesn't need overflow clipping. */
+.tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(115% 85% at 88% -8%, rgba(244, 102, 31, 0.32), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.45s;
+  pointer-events: none;
+}
+
+.tilt-card:hover::after { opacity: 1; }
+
+/* vanilla-tilt's glare sheen */
+.tilt-card .js-tilt-glare { border-radius: inherit; }
+
+/* Depth: with preserve-3d on the card, translateZ lifts these off the surface
+   so the tilt reads as real parallax rather than a flat rotation. */
+.tilt-card .ai-icon,
+.tilt-card .path-icon { transform: translateZ(34px); }
+.tilt-card .service-num,
+.tilt-card .step-num { transform: translateZ(42px); }
+.tilt-card h3,
+.tilt-card h4 { transform: translateZ(20px); }
+.tilt-card > p,
+.tilt-card ul { transform: translateZ(10px); }
+
+/* Big ghost number in the corner — the deck numbers its service pages. */
+.service-card { position: relative; }
+
+.service-card .service-num {
+  position: absolute;
+  top: 0.5rem;
+  right: 1.1rem;
+  font-size: 3.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.13);
+  transition: -webkit-text-stroke-color 0.35s;
+  pointer-events: none;
+}
+
+.service-card:hover .service-num { -webkit-text-stroke-color: rgba(244, 102, 31, 0.55); }
+
+.service-card h3 { margin-top: 0; padding-right: 3.5rem; }
+
+.ai-card .ai-icon { transition: background 0.35s, border-color 0.35s, color 0.35s; }
+
+.ai-card:hover .ai-icon {
+  background: var(--grad);
+  border-color: transparent;
+  color: #fff;
 }
 
 .path-card-featured {
@@ -757,7 +879,7 @@ h1, h2, h3, h4, .display, .display-sm {
 .service-card { padding: 1.75rem; }
 
 .service-num {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -788,20 +910,27 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .step { padding: 1.75rem; }
 
-/* A short two-character box only shows the start of --grad, so use a tighter
-   ramp that actually reads as magenta-to-orange at this size. */
+/* Same ghost figure as .service-num, so the two numbered sections match. */
+.step { position: relative; }
+
 .step-num {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--magenta), var(--orange));
-  -webkit-background-clip: text;
-  background-clip: text;
+  position: absolute;
+  top: 0.5rem;
+  right: 1.1rem;
+  font-size: 3.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
   color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.13);
+  transition: -webkit-text-stroke-color 0.35s;
+  pointer-events: none;
 }
 
+.step:hover .step-num { -webkit-text-stroke-color: rgba(244, 102, 31, 0.55); }
+
 /* The deck sets the approach-stage names in orange. */
-.step h4 { margin-top: 0.5rem; font-size: 1.05rem; font-weight: 600; color: var(--orange-soft); }
+.step h4 { margin-top: 0; padding-right: 3.2rem; font-size: 1.05rem; font-weight: 600; color: var(--orange-soft); }
 .step p { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.6; color: rgba(255, 255, 255, 0.58); }
 
 .ai-card { padding: 1.5rem; }
@@ -846,14 +975,25 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .pill-card:hover { border-color: var(--border-lit); background: rgba(244, 102, 31, 0.10); transform: translateY(-3px); }
 
-.team-card { padding: 1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; }
-.team-card i { color: var(--orange-soft); width: 1.1rem; text-align: center; }
-.team-card span { font-size: 0.9rem; color: rgba(255, 255, 255, 0.82); }
+/* Team cards use the .ai-card shell so the two icon-led sections match. */
+.team-card { padding: 1.5rem; }
+.team-card h4 { margin-top: 1rem; font-size: 1rem; font-weight: 600; }
+
+/* Why-choose-us: same shell, but heading-scale type since there is no body copy. */
+.reason-card { padding: 1.6rem 1.5rem; }
+
+.reason-card h3 {
+  margin-top: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
 
 .stat { padding: 2rem; text-align: center; }
 
 .stat-num {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(2.25rem, 4vw, 3rem);
   font-weight: 700;
   background: var(--grad);

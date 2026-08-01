@@ -12,7 +12,7 @@ Ten service domains: Digital Marketing & Growth · Branding, Creative & Content 
 
 ## Tech Stack
 
-Flat-file, zero-build. CDN deps. No Node.js, bundler, or `package.json`.
+Flat-file, zero-build. **No CDN — every third-party asset is vendored under `assets/vendor/` (1.6 MB), so the site runs with no network.** No Node.js, bundler, or `package.json`.
 
 | File | Purpose |
 |---|---|
@@ -22,6 +22,7 @@ Flat-file, zero-build. CDN deps. No Node.js, bundler, or `package.json`.
 | `script.js` | Vanilla JS: portfolio carousel, AOS, accordion, header, mobile nav |
 | `assets/portfolio/<slug>/` | Web-optimised images (`01.jpg`…`NN.jpg`, `logo.png`) |
 | `assets/clients/` | Client logos for the marquee, transparent PNG |
+| `assets/vendor/` | Vendored Tailwind, Plus Jakarta Sans, AOS, Font Awesome, three.js, Vanta, vanilla-tilt |
 
 ### Source material (not shipped)
 
@@ -32,16 +33,21 @@ Flat-file, zero-build. CDN deps. No Node.js, bundler, or `package.json`.
 
 The per-client **`.jpg` is the rendered portfolio card** and is the source of truth for its copy, tagline, and tag pills. Several `.pdf` siblings are 0 bytes — use the `.jpg`.
 
-### CDN deps (in `<head>`, all free/public license)
+### Vendored deps (`assets/vendor/`, all free/public license)
 
 | Library | License | Usage |
 |---|---|---|
-| Tailwind CSS | MIT | Layout, spacing, colors |
-| Google Fonts (Inter + Space Grotesk) | OFL | Body + display typography |
-| AOS | MIT | Scroll fade/zoom animations |
-| Font Awesome 6 | Free (SIL OFL / MIT) | Icons |
+| Tailwind CSS 3.4.5 (Play build) | MIT | Layout, spacing, colors |
+| Plus Jakarta Sans (variable) | OFL | All typography |
+| AOS 2.3.4 | MIT | Scroll fade/zoom animations |
+| Font Awesome 6.5.2 | Free (SIL OFL / MIT) | Icons |
 | three.js **r134** | MIT | Required by Vanta — see below |
-| Vanta.js 0.5.24 | MIT | Animated hero waves + page background |
+| Vanta.js 0.5.24 | MIT | Hero waves + page background |
+| vanilla-tilt 1.8.1 | MIT | 3D tilt/glare on content cards |
+
+**Keep it offline.** The only remote reference left in the shipped files is the `wa.me` WhatsApp *link* (an anchor, not a resource). Verified by loading the page with all DNS blocked (`--host-resolver-rules="MAP * ~NOTFOUND"`): fonts resolve, icons render, 0 broken images. Don't reintroduce a CDN `<link>`/`<script>`.
+
+> When re-vendoring Font Awesome: fix the `../webfonts/` paths, and if you strip the `.ttf` sources remove the **leading comma** with them. Leaving `src:url(...woff2) format("woff2"),` with a trailing comma invalidates the whole declaration and every icon silently renders as an empty box.
 
 ---
 
@@ -67,8 +73,9 @@ Dark theme only. No light sections.
 
 ### Typography
 
-- Headings: `Space Grotesk`, `letter-spacing: -0.02em`, responsive `clamp()`
-- Body: `Inter`
+- One family throughout: **Plus Jakarta Sans**, `letter-spacing: -0.02em` on headings, responsive `clamp()`
+- Chosen by comparing candidates against a full-resolution crop of the deck's body copy. The deck has a **double-storey `a`**, single-storey `g` and round bowls — Space Grotesk's quirky forms (its `a`, `g`, `y`, `M`) appear nowhere in the deck, so it was replaced. Poppins is out too: single-storey `a`.
+- Display weight is **800** (the deck sets headings very heavy and tight); `.thin` is 300
 - The deck pairs a **light word with a bold word** in every heading. Mirror it: `<span class="thin">Our</span> approach`
 - Inline accent: `<em class="accent">`
 
@@ -92,10 +99,54 @@ Flat descriptive class names on top of Tailwind. Hover adds `translateY(-4px)` +
 | `.service-card` / `.service-num` | Numbered service cards |
 | `.step` / `.step-num` | Our Approach stages |
 | `.ai-card` / `.ai-icon` | AI solutions |
-| `.pill-card` | Single-line capability pills |
-| `.team-card` | Icon + role row |
+| `.pill-card` | Single-line capability pills (Supporting Oman's Digital Future only) |
+| `.reason-card` | Why-choose-us — `.ai-card` shell with heading-scale type, no body copy |
+| `.team-card` | Our Team — `.ai-card` shell, icon chip + role heading |
+| `.card-grid` / `-3` / `-4` / `-5` | Flex card rows that centre a short final row |
+| `.tilt-card` | Card chrome + vanilla-tilt target — see below |
 | `.faq` | `<details>` accordion items |
 | `.cta` / `.chat-fab` | Gradient CTA, WhatsApp FAB |
+
+---
+
+## Section Order
+
+Deliberate, do not reshuffle casually:
+
+`hero → client marquee → #work → #ai-solutions → #services → #why → #process → #team → #about → Supporting Oman's Digital Future → #contact → CTA → footer`
+
+**FAQ is commented out** in `index.html` (kept in place, not deleted) — uncomment the `<!-- FAQ — hidden for now … -->` block to restore it.
+
+The two AI sections sit **immediately after the portfolio** (show the work, then what powers it), and **About sits directly above the Let's Talk contact block** so the page closes on who we are and how to reach us. The nav links follow the same order.
+
+---
+
+## Card Rows (`.card-grid`)
+
+Card rows are **flex, not grid**. With `grid`, a final row holding fewer cards than there are columns hugs the left edge; flex + `justify-content: center` centres it under the rest. Basis is `(100% - (cols-1) × gap) / cols`, one class per column count.
+
+Verified: the 10-card services row (last row = 1 card) measures 399 px of gap on both sides; the 7-step approach row (last row = 3) measures 150 px on both sides.
+
+Sections using it: AI Solutions (`-5`), Services (`-3`), Why Choose Us (`-4`), Our Approach (`-4`), Our Team (`-4`).
+
+---
+
+## Card Chrome (`.tilt-card`)
+
+44 cards carry it: `.service-card`, `.ai-card` (incl. `.reason-card` and `.team-card`), `.path-card`, `.step`. Applied in `index.html` as an extra class; the effects are CSS plus vanilla-tilt.
+
+- `::before` — a 1px gradient edge in the brand ramp, drawn with a `mask-composite: exclude` trick so only the border paints. Fades in on hover.
+- `::after` — warm orange bloom in the top corner, echoing the deck's gradient corners.
+- `.service-card .service-num` **and `.step .step-num`** — the deck numbers its service pages, so the number is a large outlined ghost figure in the corner (`-webkit-text-stroke`, no fill) that warms to orange on hover. Both numbered sections share this treatment; keep them identical.
+- vanilla-tilt supplies the tilt and glare sheen, and card contents `translateZ` off the surface (icon 34 px, number 42 px, heading 20 px, copy 10 px) so the tilt reads as real parallax.
+
+> **Never put `overflow: hidden` on `.tilt-card`.** Per spec it forces `transform-style` back to `flat`, silently killing every `translateZ` and flattening the 3D. That is why the `::after` bloom is `inset: 0` with an off-centre radial rather than an overhanging circle — nothing needs clipping. Check with `getComputedStyle(card).transformStyle === 'preserve-3d'`.
+
+> Tilted cards must **not** have a `transform` in their `:hover` rule — vanilla-tilt writes `transform` inline and the two fight. Hover feedback on these is border + shadow only. `.team-card` is not tilted and keeps its `translateY`.
+
+Tilt is initialised only when the pointer is fine and hover-capable, and never under `prefers-reduced-motion` — on touch there is no hover and the transform is just battery cost.
+
+All card icons are Font Awesome 6 free **solid** glyphs from the vendored webfont — no new downloads needed. Confirm a glyph exists with `grep '\.fa-<name>:before' assets/vendor/fontawesome.css` before using it.
 
 ---
 
@@ -145,7 +196,7 @@ Vanta's lighting brightens the base colour substantially, so `color` is set far 
 
 The deck slide sets its logos on a near-white card, so extraction derives alpha from each pixel's distance to the card colour and then un-blends the observed colour back out of that background, giving clean transparent PNGs. `filter: brightness(0) invert(1)` flattens them to white at display time, so the colour originals survive in the files if a colour treatment is ever wanted.
 
-Heights are inline per logo, set to a constant visual **area** (2700) exactly as `.pf-logo` does — measured spread across all 13 is ±4%.
+Heights are inline per logo, set to a constant visual **area** (5200) exactly as `.pf-logo` does — measured spread across all 13 is ±4%, rendering between 31 px and 73 px tall. Resize by changing that one constant and recomputing every `style="height:Npx"`; don't hand-tune individual logos or they stop reading as one set.
 
 The track holds the 13 logos **twice**; `@keyframes scroll` translates by `-50%`, so the two halves must stay identical in width or the loop jumps. The duplicate set is `aria-hidden` with empty `alt`.
 
