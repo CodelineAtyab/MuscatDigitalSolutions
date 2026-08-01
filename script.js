@@ -38,6 +38,40 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   }
 })();
 
+/* Fixed page-wide background: the connected-node topology, via VANTA.NET.
+   NET rather than VANTA.TOPOLOGY — TOPOLOGY is a p5.js effect, which would add
+   ~1 MB (LGPL) on top of the three.js already loaded here, and it renders as
+   an almost invisible flow-field texture at these colours. NET draws the
+   node-and-edge network the brief was after and reuses three.js.
+   Same guards as the hero: skipped under reduced motion or if Vanta didn't
+   load, leaving the opaque body::before gradient as the background. */
+(() => {
+  const el = document.querySelector('#site-topology');
+  if (!el || reduceMotion || !window.VANTA || !window.VANTA.NET) return;
+  try {
+    window.__siteTopology = window.VANTA.NET({
+      el,
+      mouseControls: false,   // it is behind the whole page; don't trap input
+      touchControls: false,
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      scale: 1,
+      scaleMobile: 1,
+      color: 0x7c4dff,        // --violet; body::before adds the magenta/orange
+      backgroundColor: 0x060518,
+      points: 9,
+      maxDistance: 21,
+      spacing: 18,
+      showDots: true
+    });
+    // Thins body::before to its translucent variant so the animation shows.
+    document.body.classList.add('topology-on');
+  } catch (err) {
+    el.remove();
+  }
+})();
+
 /* =========================================================================
    PORTFOLIO — category filters + auto-sliding carousel
    Two cards per view on desktop, one on phones (driven by the CSS width of

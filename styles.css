@@ -30,7 +30,21 @@ body {
   overflow-x: hidden;
 }
 
-/* Deep vertical wash so the page reads indigo rather than flat black. */
+/* Fixed page-wide animated background. Sits behind everything and does not
+   scroll, so the whole page shares one continuous field. */
+#site-topology {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background: var(--bg);
+}
+
+#site-topology canvas { position: absolute !important; inset: 0; }
+
+/* Deep vertical wash so the page reads indigo rather than flat black. Opaque
+   on its own; once TOPOLOGY is live it drops to a translucent variant so the
+   animation shows through — see .topology-on below. */
 body::before {
   content: '';
   position: fixed;
@@ -40,6 +54,15 @@ body::before {
     radial-gradient(ellipse 90% 55% at 12% 0%, rgba(124, 77, 255, 0.20), transparent 60%),
     radial-gradient(ellipse 70% 50% at 88% 12%, rgba(229, 57, 154, 0.14), transparent 60%),
     linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 45%);
+}
+
+/* Translucent so the topology reads through, but dark enough to keep body
+   copy legible over it. Measured, not guessed — see AGENTS.md. */
+body.topology-on::before {
+  background:
+    radial-gradient(ellipse 90% 55% at 12% 0%, rgba(124, 77, 255, 0.22), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 88% 12%, rgba(229, 57, 154, 0.16), transparent 60%),
+    linear-gradient(180deg, rgba(12, 10, 38, 0.66) 0%, rgba(6, 5, 24, 0.76) 45%);
 }
 
 ::selection { background: var(--orange); color: #fff; }
@@ -155,11 +178,14 @@ h1, h2, h3, h4, .display, .display-sm {
 /* Vanta mounts its WebGL canvas in here. WAVES only takes one base colour, so
    .aurora sits on top to carry the magenta/orange end of the brand gradient —
    and is what you see if the CDN or WebGL is unavailable. */
+/* Opaque base: the hero must fully occlude the fixed page topology behind it,
+   including when WebGL/the CDN is unavailable and no canvas is drawn here. */
 .hero-waves {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
 }
 
 .hero-waves canvas {

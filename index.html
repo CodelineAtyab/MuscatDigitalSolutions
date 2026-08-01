@@ -31,6 +31,11 @@
 </head>
 <body class="text-white antialiased">
 
+  <!-- Fixed page-wide Vanta NET background (connected-node topology); the
+       body::before wash sits over it and the hero paints its own opaque
+       background on top so the network never shows through there. -->
+  <div id="site-topology" aria-hidden="true"></div>
+
   <!-- NAV -->
   <header class="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-5 flex items-center justify-between backdrop-blur-md bg-black/40 border-b border-white/5">
     <a href="#" class="text-xl md:text-2xl font-bold tracking-tight">Muscat <span class="grad-text">AI Markets</span></a>
@@ -569,11 +574,14 @@
 
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
-  <!-- Vanta WAVES hero background (both MIT). Pinned: Vanta needs three r134,
-       later three releases drop APIs it calls. Loaded before script.js, which
-       initialises it and no-ops if either script fails to arrive. -->
+  <!-- Vanta backgrounds, both on three.js (pinned to r134 — later releases
+       drop APIs Vanta calls). NET gives the connected-node topology look and
+       shares the three.js already needed by WAVES, so it costs no extra
+       dependency. Loaded before script.js, which initialises both and no-ops
+       on anything that fails to arrive. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.waves.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
 
   <script src="portfolio-data.js"></script>
   <script src="script.js"></script>

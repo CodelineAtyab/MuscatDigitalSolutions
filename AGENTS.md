@@ -41,7 +41,7 @@ The per-client **`.jpg` is the rendered portfolio card** and is the source of tr
 | AOS | MIT | Scroll fade/zoom animations |
 | Font Awesome 6 | Free (SIL OFL / MIT) | Icons |
 | three.js **r134** | MIT | Required by Vanta — see below |
-| Vanta.js 0.5.24 | MIT | Animated hero waves |
+| Vanta.js 0.5.24 | MIT | Animated hero waves + page background |
 
 ---
 
@@ -99,6 +99,22 @@ Flat descriptive class names on top of Tailwind. Hover adds `translateY(-4px)` +
 
 ---
 
+## Page Background (Vanta NET)
+
+`#site-topology` — a `position: fixed` layer at `z-index: -3`, so one continuous animated field sits behind the whole page and does not scroll.
+
+```
+#site-topology (node network)  →  body.topology-on::before (translucent wash)  →  page content
+```
+
+**It is VANTA.NET, not VANTA.TOPOLOGY**, despite "topology" being the brief. TOPOLOGY is a p5.js effect: it would add ~1 MB (236 KB gzipped) of **LGPL-2.1** p5 on top of the three.js already loaded, and it renders as an almost invisible flow-field texture — verified blank at 2227 real frames, at four different colour pairs, on both p5 0.9.0 and 1.9.0, with no JS errors. NET draws the connected node-and-edge network the brief actually wanted, reuses three.js, and stays MIT. Switching back is a one-liner if a real GPU browser shows TOPOLOGY differently.
+
+`body::before` is **opaque by default** and only swaps to its translucent variant via `body.topology-on`, added after NET constructs — otherwise the page loses its background entirely when the effect is skipped.
+
+The hero must stay fully opaque on top of this: `.hero-waves` carries its own solid gradient background so the fixed network never shows through the hero, including when no canvas is drawn there.
+
+Contrast over the network, sampled on text-free regions: white **19.6–20.2:1**, `#ff8a3d` **8.4–8.6:1**. Lightening the wash further must keep those above 7:1.
+
 ## Hero Background (Vanta WAVES)
 
 `#hero-waves` in the hero section; initialised at the top of `script.js`.
@@ -118,6 +134,8 @@ Vanta's lighting brightens the base colour substantially, so `color` is set far 
 `.is-on` is added **only after** `VANTA.WAVES()` constructs successfully. The scrim and the dimmed `.aurora` are gated behind it because both are tuned against a live canvas — without one they render the hero flat and over-dark. The init no-ops under `prefers-reduced-motion`, or if either CDN script or WebGL is missing; in every such case full-strength `.aurora` alone is the finished background. Verified in all three states.
 
 > Headless screenshots of this need `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`; plain `--disable-gpu` gives no WebGL and the run times out. Software rasterising is slow — keep the window small.
+>
+> **`--virtual-time-budget` does not drive requestAnimationFrame** — measured 9 rAF frames in 9 s of virtual time. Any effect that builds up over frames therefore screenshots as blank, which is an artifact, not the effect. To capture one properly you need *real* elapsed time: serve the page from a server with an endpoint that sleeps (see the `/slow` handler used during development) and reference it from an `<img>`, which holds the load event open while rAF runs at full rate — that yielded 2227 frames in 14 s. Puppeteer cannot launch Windows Chrome from WSL, and Chrome refuses `--remote-debugging-address` here, so this is the workable route.
 
 ## Client Marquee
 
