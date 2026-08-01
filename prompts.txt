@@ -1,0 +1,9 @@
+We have to make major updates to our exising site in terms of its sections and theme based on the following rules:
+
+1. The name of our organization is Muscat AI Markets
+2. Determine the new theme and new profile content by reading the .pdf given in "organization_profile" directory. We want to update the existing theme and content with the given one.
+3. The PORTFOLIO section is currently with dummy porfolios, our actual portfolios are stored in "portfolio" directory, in this directory there are a list of directories, each denoting an individual portfolio, inside each portfolio client company name folder -> the looks and text content of the porfolio card can be identified from the .pdf file inside and there is an images folder there which contains the logo of the client company and all the original sub images that make up the porfolio card. So how it looks with text can be determined from the .pdf and source images and logo to use can be picked from the images directory. This is true for each portfolio company folder present.
+
+4. Identify the category of the portfolio from the content extracted from each portfolio's .pdf since we are going to show buttons (check existing flex gap-3 text-sm div)  with ALL and all other categories. If ALL is selected then depending on the screen (phone or PC) we can display 2 cards for bigger screens and 1 on the phone screen. Use a modern carousel that auto slides as well, this would show the portfolio card which consists of more than 1 images as mentioned in point 3.
+
+5. Once the above steps are validated then next steps would be mentioned.
