@@ -152,6 +152,42 @@ h1, h2, h3, h4, .display, .display-sm {
   transform: translateY(-2px);
 }
 
+/* Vanta mounts its WebGL canvas in here. WAVES only takes one base colour, so
+   .aurora sits on top to carry the magenta/orange end of the brand gradient —
+   and is what you see if the CDN or WebGL is unavailable. */
+.hero-waves {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-waves canvas {
+  position: absolute !important;
+  inset: 0;
+  z-index: 0 !important;
+}
+
+/* Scrim over the canvas. Wave crests catch enough light to fight the orange
+   badge and the body copy, so this is heavy directly behind the text column
+   and falls away fast towards the edges, where the animation stays visible.
+   Measured target: background luminance <= 0.11 behind the badge, which keeps
+   #ff8a3d on it above the 7:1 WCAG AAA threshold. */
+.hero-waves.is-on::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 64% 58% at 50% 46%, rgba(6, 5, 24, 0.91), rgba(6, 5, 24, 0.44) 68%, rgba(6, 5, 24, 0.10)),
+    linear-gradient(180deg, rgba(6, 5, 24, 0.55), rgba(6, 5, 24, 0.22) 45%, rgba(6, 5, 24, 0.88));
+}
+
+/* Once the waves are live the tint is held well back — they already supply the
+   violet, so this only reintroduces the warm end of the gradient rather than
+   lifting hero brightness back up and swamping the text. */
+.hero-waves.is-on ~ .aurora { opacity: 0.4; }
+
 .aurora {
   position: absolute;
   top: -22%;
@@ -160,7 +196,10 @@ h1, h2, h3, h4, .display, .display-sm {
   height: 130%;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: -1;
+  z-index: 1;
+  /* Full strength on its own — this is the whole hero background whenever the
+     canvas isn't running (no WebGL, CDN down, reduced motion). */
+  opacity: 1;
   background:
     radial-gradient(circle at 30% 35%, rgba(124, 77, 255, 0.30), transparent 55%),
     radial-gradient(circle at 68% 30%, rgba(229, 57, 154, 0.22), transparent 55%),

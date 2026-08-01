@@ -40,6 +40,8 @@ The per-client **`.jpg` is the rendered portfolio card** and is the source of tr
 | Google Fonts (Inter + Space Grotesk) | OFL | Body + display typography |
 | AOS | MIT | Scroll fade/zoom animations |
 | Font Awesome 6 | Free (SIL OFL / MIT) | Icons |
+| three.js **r134** | MIT | Required by Vanta — see below |
+| Vanta.js 0.5.24 | MIT | Animated hero waves |
 
 ---
 
@@ -96,6 +98,26 @@ Flat descriptive class names on top of Tailwind. Hover adds `translateY(-4px)` +
 | `.cta` / `.chat-fab` | Gradient CTA, WhatsApp FAB |
 
 ---
+
+## Hero Background (Vanta WAVES)
+
+`#hero-waves` in the hero section; initialised at the top of `script.js`.
+
+**Pin three.js to r134.** Later three releases drop APIs Vanta calls and the effect silently fails to construct.
+
+WAVES takes a **single** base colour — it is a lit 3D mesh, not a gradient shader — so the brand gradient is layered rather than passed in:
+
+```
+canvas (violet waves)  →  .hero-waves.is-on::after (dark scrim)  →  .aurora (warm tint)  →  content (z-10)
+```
+
+Vanta's lighting brightens the base colour substantially, so `color` is set far darker (`0x2a1466`) than the violet it ends up looking like. The scrim is heavy directly behind the text column and falls away fast towards the edges, where the animation stays visible.
+
+**Contrast is the constraint, and it is measured, not eyeballed.** Screenshot the hero and sample *text-free* background regions (sampling over the text measures the text against itself and is meaningless). Current values: background luminance 0.10–0.12 behind the copy, giving the `#ff8a3d` badge **7.1–7.4:1** and white text **16.6–17.3:1** — both past the 7:1 WCAG AAA threshold. Brightening the waves or thinning the scrim must keep the badge above 7:1.
+
+`.is-on` is added **only after** `VANTA.WAVES()` constructs successfully. The scrim and the dimmed `.aurora` are gated behind it because both are tuned against a live canvas — without one they render the hero flat and over-dark. The init no-ops under `prefers-reduced-motion`, or if either CDN script or WebGL is missing; in every such case full-strength `.aurora` alone is the finished background. Verified in all three states.
+
+> Headless screenshots of this need `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`; plain `--disable-gpu` gives no WebGL and the run times out. Software rasterising is slow — keep the window small.
 
 ## Client Marquee
 

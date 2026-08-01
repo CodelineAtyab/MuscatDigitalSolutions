@@ -49,7 +49,11 @@
 
   <!-- HERO -->
   <section class="relative pt-40 pb-24 px-6 overflow-hidden text-center">
+    <!-- Vanta WAVES canvas mounts here; .aurora stays on top as the brand
+         tint, and as the fallback if the CDN or WebGL is unavailable. -->
+    <div id="hero-waves" class="hero-waves" aria-hidden="true"></div>
     <div class="aurora"></div>
+    <div class="relative z-10">
     <span class="badge" data-aos="fade-up">✦ Muscat, Sultanate of Oman</span>
     <h1 class="display mt-6 max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="100">
       <span class="thin">Transforming businesses through</span> technology, creativity &amp; <em class="accent">innovation</em>
@@ -67,6 +71,7 @@
       <span class="px-4 py-2 rounded-full border border-white/10">Technology Solutions</span>
       <span class="px-4 py-2 rounded-full border border-white/10">Creative Services</span>
       <span class="px-4 py-2 rounded-full border border-white/10">Business Growth</span>
+    </div>
     </div>
   </section>
 
@@ -563,6 +568,13 @@
   <a href="https://wa.me/96877739396" class="chat-fab" aria-label="Chat on WhatsApp" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
 
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Vanta WAVES hero background (both MIT). Pinned: Vanta needs three r134,
+       later three releases drop APIs it calls. Loaded before script.js, which
+       initialises it and no-ops if either script fails to arrive. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.waves.min.js"></script>
+
   <script src="portfolio-data.js"></script>
   <script src="script.js"></script>
 </body>

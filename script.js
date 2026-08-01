@@ -3,6 +3,41 @@ AOS.init({ duration: 800, once: true, easing: 'ease-out-cubic' });
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* Animated hero background (Vanta WAVES over three.js).
+   Skipped entirely under prefers-reduced-motion, and if either CDN script or
+   WebGL is missing — in every one of those cases the .aurora gradient behind
+   it is already the finished background, so there is nothing to fall back to. */
+(() => {
+  const el = document.querySelector('#hero-waves');
+  if (!el || reduceMotion || !window.VANTA || !window.VANTA.WAVES) return;
+  try {
+    window.__heroWaves = window.VANTA.WAVES({
+      el,
+      mouseControls: true,
+      touchControls: false,   // don't swallow vertical scroll on phones
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      scale: 1,
+      scaleMobile: 1,
+      // Deliberately dark: the hero sits on top of this, so the waves read as
+      // texture rather than competing with the orange badge and body copy.
+      // Vanta's lighting brightens the base colour a lot, so this is set far
+      // darker than the violet it should end up looking like.
+      color: 0x2a1466,
+      shininess: 30,
+      waveHeight: 18,
+      waveSpeed: 0.7,
+      zoom: 0.82
+    });
+    // Only now dim .aurora and switch the scrim on — without a live canvas
+    // those two are tuned against nothing and the hero renders flat and dark.
+    el.classList.add('is-on');
+  } catch (err) {
+    el.remove();              // leave the CSS gradient as the background
+  }
+})();
+
 /* =========================================================================
    PORTFOLIO — category filters + auto-sliding carousel
    Two cards per view on desktop, one on phones (driven by the CSS width of
