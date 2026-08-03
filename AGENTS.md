@@ -100,14 +100,22 @@ Flat descriptive class names on top of Tailwind. Hover adds `translateY(-4px)` +
 | `.step` / `.step-num` | Our Approach stages |
 | `.ai-card` / `.ai-icon` | AI solutions |
 | `.pill-card` | Single-line capability pills (Supporting Oman's Digital Future only) |
-| `.reason-card` | Why-choose-us — `.ai-card` shell with heading-scale type, no body copy |
-| `.team-card` | Our Team — `.ai-card` shell, icon chip + role heading |
+| `.reason-card` | Why-choose-us — `.ai-card` shell, compact translucent row, no body copy |
+| `.team-card` | Our Team — same compact translucent row, icon chip + role heading |
 | `.card-grid` / `-3` / `-4` / `-5` | Flex card rows that centre a short final row |
 | `.tilt-card` | Card chrome + vanilla-tilt target — see below |
 | `.faq` | `<details>` accordion items |
 | `.cta` / `.chat-fab` | Gradient CTA, WhatsApp FAB |
 
 ---
+
+## Vertical Rhythm
+
+Sections are `py-12 md:py-16`, and the heading-to-card-grid gap is `mt-10`. Because adjacent sections each contribute their own padding, the *visible* gap is double the utility — measured 128–133 px on desktop and 96–101 px on mobile, uniform across every boundary. The earlier `py-28` doubled to 224 px and read as dead space.
+
+Two exceptions, deliberate: the client marquee is a compact `py-8` band, and the hero closes with `pb-16 md:pb-24` so its gap to the marquee matches the rest.
+
+Measure this rather than eyeballing it — adjacent sections abut, so the whitespace is the distance from one section's last in-flow child to the next section's first, not the gap between the section boxes (which is always 0). Filter out `position: fixed`/`absolute` children first, or the portfolio lightbox shells inside `#work` report a ~2000 px phantom gap.
 
 ## Section Order
 
@@ -142,7 +150,9 @@ Sections using it: AI Solutions (`-5`), Services (`-3`), Why Choose Us (`-4`), O
 
 > **Never put `overflow: hidden` on `.tilt-card`.** Per spec it forces `transform-style` back to `flat`, silently killing every `translateZ` and flattening the 3D. That is why the `::after` bloom is `inset: 0` with an off-centre radial rather than an overhanging circle — nothing needs clipping. Check with `getComputedStyle(card).transformStyle === 'preserve-3d'`.
 
-> Tilted cards must **not** have a `transform` in their `:hover` rule — vanilla-tilt writes `transform` inline and the two fight. Hover feedback on these is border + shadow only. `.team-card` is not tilted and keeps its `translateY`.
+> Tilted cards must **not** have a `transform` in their `:hover` rule — vanilla-tilt writes `transform` inline and the two fight. Hover feedback on these is border + shadow only. `.team-card` carries `.tilt-card` in the markup, so it shares that rule too.
+
+`.ai-card` and `.path-card` lay out as a two-column grid: the icon and the heading share row 1, everything after them spans both columns beneath. Every child spans by default and only `.ai-icon`/`.path-icon` and the heading are pinned to row 1, so a new child can't fall into the icon column. `.reason-card` and `.team-card` have no body copy, so the same grid renders them as one compact row — tightened padding and a translucent `rgba(255,255,255,.045)` surface that lets the NET background read through. **No `backdrop-filter` on these:** like `filter` and `opacity < 1` it is a grouping property, so it forces `transform-style` back to `flat` and kills the `translateZ` depth exactly as `overflow: hidden` does.
 
 Tilt is initialised only when the pointer is fine and hover-capable, and never under `prefers-reduced-motion` — on touch there is no hover and the transform is just battery cost.
 
@@ -199,6 +209,10 @@ The deck slide sets its logos on a near-white card, so extraction derives alpha 
 Heights are inline per logo, set to a constant visual **area** (5200) exactly as `.pf-logo` does — measured spread across all 13 is ±4%, rendering between 31 px and 73 px tall. Resize by changing that one constant and recomputing every `style="height:Npx"`; don't hand-tune individual logos or they stop reading as one set.
 
 The track holds the 13 logos **twice**; `@keyframes scroll` translates by `-50%`, so the two halves must stay identical in width or the loop jumps. The duplicate set is `aria-hidden` with empty `alt`.
+
+Duration is 38s on desktop and **20s under 768px**. The animation moves the same distance either way, but a phone shows only two or three lockups at a time, so the desktop timing reads as barely moving — the shorter loop keeps the perceived speed matched.
+
+Every lockup carries its **intrinsic `width`/`height` attributes and must not be `loading="lazy"`** — both are load-order correctness, not micro-optimisation. `-50%` resolves against the track's own box, and a composited transform animation keeps whatever pixel distance it resolved when it was committed. Lazy, dimensionless images made the track start at roughly the sum of its gaps and grow as files landed, so the animation was committed short: the marquee crawled, and the first hover (which changes `animation-play-state` and forces a re-commit) snapped it to the correctly-resolved position — the "resets on first hover, fine afterwards" bug. The attributes let `width: auto` resolve through the aspect ratio at first layout, so the box is final before the animation starts. Measured: track width at `DOMContentLoaded` was 2816 px against a final 3474 px at 430 px wide; with attributes it is 3474 px at both events, and 4074 px at both on desktop.
 
 G Forge Studios and Legit Design Studios sit in a separate sub-card on that slide — they are **partners, not clients**, and belong in the Our Partners section noted in `notes.txt`, not this marquee.
 
