@@ -821,8 +821,19 @@ h1, h2, h3, h4, .display, .display-sm {
 
 .tilt-card:hover::after { opacity: 1; }
 
-/* vanilla-tilt's glare sheen */
-.tilt-card .js-tilt-glare { border-radius: inherit; }
+/* vanilla-tilt's glare sheen. The library appends it as the card's last child,
+   so on the grid-based cards it was being caught by the `.ai-card > *` /
+   `.path-card > * { grid-column: 1 / -1 }` rules. An absolutely-positioned grid
+   child with a *definite* placement resolves its containing block to the grid
+   AREA — which sits inside the card's padding — instead of the padding box, so
+   the sheen stopped 17-29 px short of the left and right edges and the card
+   read as two differently lit surfaces. Only the inline axis was affected,
+   since grid-row stayed auto. `grid-area: auto` puts it back on the padding box
+   in both axes. */
+.tilt-card .js-tilt-glare {
+  grid-area: auto;
+  border-radius: inherit;
+}
 
 /* Depth: with preserve-3d on the card, translateZ lifts these off the surface
    so the tilt reads as real parallax rather than a flat rotation. */
